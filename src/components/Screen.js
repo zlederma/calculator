@@ -1,6 +1,7 @@
 import './Screen.css';
 export default function Screen() {
     return (
-        <div>Screen</div>
+        <div className='screen__container'>
+        </div>
     )
 }

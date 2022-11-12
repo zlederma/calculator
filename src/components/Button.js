@@ -2,6 +2,6 @@ import './Button.css';
 
 export default function Button() {
     return (
-        <div>Button</div>
+        <button className='button__button'> x </button>
     )
 }
