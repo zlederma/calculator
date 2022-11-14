@@ -13,6 +13,23 @@ export default function Calculator() {
     const [result, setResult] = useState();
 
     const operator = (val) => {
+        switch (val) {
+            case '^':
+                break;
+            case '÷':
+                break;
+            case 'x':
+                break;
+            case '-':
+                break;
+            case '+':
+                break;
+            case '-':
+                break;
+            default:
+                throw new Error('val not found')
+            //error handling
+        }
 
     }
 
@@ -64,11 +81,12 @@ export default function Calculator() {
             case '=':
                 equals();
             default:
-            //error handling
+                throw new Error('val not found')
         }
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
+    //should include updating result and equation
     const handleClick = (button) => {
         setButton(button)
         const category = button.cat;
@@ -84,7 +102,7 @@ export default function Calculator() {
                 other(val);
                 break;
             default:
-            //error handling
+                throw new Error('val not found')
         }
     }
 
