@@ -17,6 +17,9 @@ export default function Screen(props) {
             <div className='screen__equation'>
                 {showEquation()}
             </div>
+            <div className='screen__result'>
+                {props.result}
+            </div>
         </div>
     )
 }
