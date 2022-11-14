@@ -20,6 +20,30 @@ export default function Calculator() {
 
     }
 
+    const del = () => {
+
+    }
+
+    const clear = () => {
+
+    }
+
+    const parentheses = () => {
+
+    }
+
+    const negative = () => {
+
+    }
+
+    const decimal = () => {
+
+    }
+
+    const equals = () => {
+
+    }
+
     const other = (val) => {
         switch (val) {
             case 'del':
@@ -42,31 +66,6 @@ export default function Calculator() {
             default:
             //error handling
         }
-
-    }
-
-    const parentheses = () => {
-
-    }
-
-    const equals = () => {
-
-    }
-
-    const clear = () => {
-
-    }
-
-    const negative = () => {
-
-    }
-
-    const decimal = () => {
-
-    }
-
-    const del = () => {
-
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
