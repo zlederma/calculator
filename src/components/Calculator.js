@@ -8,17 +8,16 @@ import { useState, useEffect, useRef } from 'react';
 export default function Calculator() {
     //equation is an array of charactars that show the current equation on the screen
     const [equation, setEquation] = useState([]);
-    // const [result, setResult] = useState();
 
     //store as strings so I can concatenate onto them
-    let lastOperator = useRef("x").current;
+    const lastOperator = useRef("x");
     const result = useRef();
     const lhs = useRef();
     const rhs = useRef();
 
     const calculateResult = () => {
         let res = 0;
-        switch (lastOperator) {
+        switch (lastOperator.current) {
             case '^':
                 // return math.parseFloat(lhs) + parseFloat(rhs)
                 break;
@@ -53,7 +52,7 @@ export default function Calculator() {
         const cat = button.cat;
         //TODO parentheses logic 
         if (equation[equation.length - 1].cat === 'operand') {
-            lastOperator = button.val;
+            lastOperator.current = button.val;
             setEquation([...equation, button]);
         }
 
@@ -61,7 +60,7 @@ export default function Calculator() {
             //using spead operator to copy the array, but make it so that react sees it as a new array
             const temp = [...equation];
             temp[temp.length - 1] = button;
-            lastOperator = button.val;
+            lastOperator.current = button.val;
             setEquation(temp);
         }
     }
@@ -82,7 +81,6 @@ export default function Calculator() {
             return;
         }
         if (equation[equation.length - 1].cat === 'operand') {
-            // setRhs(rhs + button.val);
             rhs.current = rhs.current + button.val;
             result.current = calculateResult();
             console.log("result" + result)
