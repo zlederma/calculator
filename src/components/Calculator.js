@@ -54,6 +54,8 @@ export default function Calculator() {
         if (equation[equation.length - 1].cat === 'operand') {
             lastOperator.current = button.val;
             setEquation([...equation, button]);
+            lhs.current = rhs.current !== undefined ? result.current : lhs.current;
+            rhs.current = undefined;
         }
 
         if (equation[equation.length - 1].cat === 'operator') {
@@ -75,6 +77,7 @@ export default function Calculator() {
             console.log("lhs:" + lhs.current);
             return;
         }
+
         if (rhs === undefined && equation[equation.length - 1].cat === 'operand') {
             lhs.current = lhs.current + button.val;
             console.log("lhs:" + lhs)
