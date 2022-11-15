@@ -9,7 +9,9 @@ export default function Screen(props) {
     return (
         <div className='screen__container'>
             <div className='screen__equation'>{showEquation()}</div>
-            <div className='screen__result'>{props.result}</div>
+            <div className='screen__result-container'>
+                <div className='screen__result'>{props.result}</div>
+            </div>
         </div>
     )
 }
