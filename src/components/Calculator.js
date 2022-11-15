@@ -11,10 +11,13 @@ export default function Calculator() {
 
     //store as strings so I can concatenate onto them
     const lastOperator = useRef("x");
+    const endButton = equation.length > 0 ? equation[equation.length - 1] : "";
+
     const result = useRef();
     const lhs = useRef();
     const rhs = useRef();
 
+    //
     const calculateResult = () => {
         let res = 0;
         switch (lastOperator.current) {
@@ -51,14 +54,14 @@ export default function Calculator() {
         const val = button.val;
         const cat = button.cat;
         //TODO parentheses logic 
-        if (equation[equation.length - 1].cat === 'operand') {
+        if (endButton.cat === 'operand') {
             lastOperator.current = button.val;
             setEquation([...equation, button]);
             lhs.current = rhs.current !== undefined ? result.current : lhs.current;
             rhs.current = undefined;
         }
 
-        if (equation[equation.length - 1].cat === 'operator') {
+        if (endButton.cat === 'operator') {
             //using spead operator to copy the array, but make it so that react sees it as a new array
             const temp = [...equation];
             temp[temp.length - 1] = button;
@@ -78,12 +81,12 @@ export default function Calculator() {
             return;
         }
 
-        if (rhs === undefined && equation[equation.length - 1].cat === 'operand') {
+        if (rhs === undefined && endButton.cat === 'operand') {
             lhs.current = lhs.current + button.val;
             console.log("lhs:" + lhs)
             return;
         }
-        if (equation[equation.length - 1].cat === 'operand') {
+        if (endButton.cat === 'operand') {
             rhs.current = rhs.current + button.val;
             result.current = calculateResult();
             console.log("result" + result)
@@ -163,10 +166,6 @@ export default function Calculator() {
                 throw new Error('val not found')
         }
     }
-
-    // useEffect(() => {
-
-    // }, [equation]);
 
     return (
         <div className='calculator__container'>
