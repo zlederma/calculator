@@ -2,13 +2,6 @@ import './Buttons.css';
 import Button from './Button';
 
 export default function Buttons(props) {
-    const showButtons = () => {
-        const buttons = [];
-        for (let i = 0; i < 20; i++) {
-            buttons.push(<Button val='h' handleClick={props.handleClick} />)
-        }
-        return buttons;
-    }
     return (
         <div className='buttons__wrapper'>
             <div className='buttons__delete-container'>
