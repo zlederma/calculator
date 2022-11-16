@@ -153,7 +153,7 @@ export default function Calculator() {
     }
 
     const decimal = (button) => {
-        const zero = { cat: "operand", val: "operator" };
+        const zero = { cat: "operand", val: "0." };
         const multiply = { cat: "operator", val: "x" }
         if (equation.length === 0 || prevTerm.cat === "operator" || prevTerm.val === "(" || prevTerm.val === "n") {
             setEquation([...equation, zero]);
