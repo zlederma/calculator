@@ -4,16 +4,50 @@ import Buttons from './Buttons';
 import { useState, useEffect, useRef } from 'react';
 
 export default function Calculator() {
+    //(-) will become n
     //use useState to lift up state in order to figure out what button is pressed
     const [equation, setEquation] = useState([]);
-    const result = useRef("")
+    let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
+    const prevOperator = useRef("x");
+    const result = useRef("Hi");
+    //use this to keep track of how many opening(l) and closing(r) parentheses there are
+    const lParenthesesCount = useRef(0);
+    const rParenthesesCount = useRef(0);
+    const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
+    console.log(areParenthesesClosed);
+
 
     const operator = (button) => {
+        if (equation.length === 0) {
+            throw new Error('Not allowed');
+        }
+        if (prevTerm.cat === 'operator') {
+            //creating a temp variable so that react sees this as a new array.
+            const temp = [...equation];
+            temp[temp.length - 1] = button;
+            prevOperator.current = button.val;
+            setEquation(temp);
+            return;
+        }
+        if (prevTerm.val === "n" || prevTerm.val.endsWith(".")) {
+            throw new Error('Not allowed');
+        }
+
         setEquation([...equation, button])
     }
 
     const operand = (button) => {
-        setEquation([...equation, button])
+        if (equation.length === 0) {
+            setEquation([...equation, button]);
+            return;
+        }
+        if (prevTerm.cat === 'operand' || prevTerm.val === 'n' || prevTerm.val === '.') {
+            const temp = [...equation];
+            temp[temp.length - 1].val = prevTerm.val + button.val;
+            setEquation(temp);
+            return;
+        }
+        setEquation([...equation, button]);
     }
 
     const other = (button) => {
@@ -26,7 +60,7 @@ export default function Calculator() {
                 clear();
                 break;
             case '()':
-                parentheses();
+                parentheses(button);
                 break;
             case '(-)':
                 negative();
@@ -52,7 +86,37 @@ export default function Calculator() {
     }
 
     const parentheses = (button) => {
-
+        if (equation.length === 0) {
+            button.val = "("
+            setEquation([...equation, button]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
+            return;
+        }
+        if (prevTerm.cat === 'operator' || prevTerm.val === '(') {
+            button.val = "("
+            setEquation([...equation, button]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
+            return;
+        }
+        if ((prevTerm.cat === 'operand' || prevTerm.val === ")") && !areParenthesesClosed) {
+            button.val = ")"
+            setEquation([...equation, button]);
+            rParenthesesCount.current = rParenthesesCount.current + 1;
+            return;
+        }
+        if (prevTerm.val === ")" && areParenthesesClosed) {
+            button.val = "(";
+            const multiply = { cat: "operator", val: "x" };
+            setEquation([...equation, multiply, button]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
+            return;
+        }
+        if (prevTerm.val === "n" || prevTerm.val.endsWith(".")) {
+            throw new Error('Not allowed');
+        }
+        else {
+            throw new Error('A case we were not expecting');
+        }
     }
 
     const negative = (button) => {
