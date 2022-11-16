@@ -8,7 +8,6 @@ export default function Calculator() {
     //use useState to lift up state in order to figure out what button is pressed
     const [equation, setEquation] = useState([]);
     let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
-    const prevOperator = useRef("x");
     const result = useRef("Hi");
     //use this to keep track of how many opening(l) and closing(r) parentheses there are
     const lParenthesesCount = useRef(0);
@@ -25,7 +24,6 @@ export default function Calculator() {
             //creating a temp variable so that react sees this as a new array.
             const temp = [...equation];
             temp[temp.length - 1] = button;
-            prevOperator.current = button.val;
             setEquation(temp);
             return;
         }
@@ -78,6 +76,17 @@ export default function Calculator() {
     }
 
     const del = (button) => {
+        if (equation[equation.length - 1] === "(") {
+            lParenthesesCount.current = lParenthesesCount.current - 1;
+        }
+
+        if (equation[equation.length - 1] === ")") {
+            rParenthesesCount.current = rParenthesesCount.current - 1;
+        }
+
+        const temp = equation.slice(0, equation.length - 1);
+        setEquation(temp);
+        return;
 
     }
 
@@ -155,6 +164,10 @@ export default function Calculator() {
     const decimal = (button) => {
         const zero = { cat: "operand", val: "0." };
         const multiply = { cat: "operator", val: "x" }
+        if (prevTerm.val === "." || prevTerm.val.includes(".")) {
+            throw new Error('Not allowed');
+        }
+
         if (equation.length === 0 || prevTerm.cat === "operator" || prevTerm.val === "(" || prevTerm.val === "n") {
             setEquation([...equation, zero]);
         }
@@ -166,9 +179,6 @@ export default function Calculator() {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
-        }
-        if (prevTerm.val === ".") {
-            throw new Error('Not allowed');
         }
     }
 
