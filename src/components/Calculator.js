@@ -14,7 +14,7 @@ export default function Calculator() {
     const lParenthesesCount = useRef(0);
     const rParenthesesCount = useRef(0);
     const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
-    console.log(areParenthesesClosed);
+
 
 
     const operator = (button) => {
@@ -29,7 +29,7 @@ export default function Calculator() {
             setEquation(temp);
             return;
         }
-        if (prevTerm.val === "n" || prevTerm.val.endsWith(".")) {
+        if (prevTerm.cat === "n" || prevTerm.val.endsWith(".") || prevTerm.val === "(") {
             throw new Error('Not allowed');
         }
 
@@ -66,7 +66,7 @@ export default function Calculator() {
                 negative();
                 break;
             case '.':
-                decimal();
+                decimal(button);
                 break;
             case '=':
                 equals();
@@ -104,7 +104,7 @@ export default function Calculator() {
             rParenthesesCount.current = rParenthesesCount.current + 1;
             return;
         }
-        if (prevTerm.val === ")" && areParenthesesClosed) {
+        if ((prevTerm.val === ")" && areParenthesesClosed) || lParenthesesCount.current === 0) {
             button.val = "(";
             const multiply = { cat: "operator", val: "x" };
             setEquation([...equation, multiply, button]);
@@ -120,11 +120,56 @@ export default function Calculator() {
     }
 
     const negative = (button) => {
+        const lParentheses = { cat: "other", val: "(" }
+        const multiply = { cat: "operator", val: "x" }
+        const neg = { cat: "other", val: "n" }
+        if (equation.length === 0 || prevTerm.cat === "operator") {
+            setEquation([...equation, lParentheses, neg]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
+            return;
+        }
 
+        if (prevTerm.val === "(") {
+            setEquation([...equation, neg]);
+            return;
+        }
+
+        if (prevTerm.val === ")") {
+            setEquation([...equation, multiply, lParentheses, neg]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
+            return;
+        }
+
+        if (prevTerm.val === "n") {
+            const temp = equation.slice(0, equation.length - 2);
+            setEquation(temp);
+            lParenthesesCount.current = lParenthesesCount.current - 1;
+            return;
+        }
+
+        if (prevTerm.cat === "operand" || prevTerm.val === ".") {
+            throw new Error('Not allowed');
+        }
     }
 
     const decimal = (button) => {
+        const zero = { cat: "operand", val: "operator" };
+        const multiply = { cat: "operator", val: "x" }
+        if (equation.length === 0 || prevTerm.cat === "operator" || prevTerm.val === "(" || prevTerm.val === "n") {
+            setEquation([...equation, zero]);
+        }
 
+        if (prevTerm.val === ")") {
+            setEquation([...equation, multiply, zero]);
+        }
+        if (prevTerm.cat === "operand") {
+            const temp = [...equation];
+            temp[temp.length - 1].val = prevTerm.val + button.val;
+            setEquation(temp);
+        }
+        if (prevTerm.val === ".") {
+            throw new Error('Not allowed');
+        }
     }
 
     const equals = (button) => {
