@@ -1,4 +1,39 @@
 .button__button{
-    width: 100px;
-    height: 100px;
+    font-family: 'Comfortaa', cursive;
+    font-size: 25px;
+    font-weight: 500;
+    background-color: #240034;
+    color: #e5ccf0;
+    border-radius: 40%;
+    border: none;
+    width: 80px;
+    height: 80px;
+    margin: 5px;
+}
+
+.button__button-operand, .button__button-decimal, .button__button-negative{
+    background-color: #7c7f98;
+    color: #edeef0;
+}
+
+.button__button-operator, .button__button-parentheses{
+    background-color: #edeef0;
+    color: #7c7f98;
+}
+
+.button__button-equals{
+ font-weight: 900;
+    background-color: #000213;
+    color: #edeef0;
+}
+
+.button__button-clear{
+    font-weight: 900;
+    background-color: #edeef0;
+    color: #000213;
+}
+
+.button__button-delete{
+    background-color: #7c7f98;
+    color: #edeef0;
 }

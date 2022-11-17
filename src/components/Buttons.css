@@ -1,0 +1,19 @@
+.buttons__wrapper{
+
+}
+
+.buttons__delete-container{
+    display: flex;
+    justify-content: flex-end;
+}
+
+.buttons__delete-container Button{
+   width: 120px;
+   height: 40px;
+   border-radius: 10px;
+}
+
+.buttons__container{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
