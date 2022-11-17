@@ -20,7 +20,6 @@ export default function Button(props) {
             case '()':
                 return "parentheses";
             case '(-)':
-                console.log("got it")
                 return "negative"
             case '.':
                 return "decimal"
@@ -30,7 +29,7 @@ export default function Button(props) {
                 throw new Error('val not found')
         }
     }
-    console.log(`button__button-${getModifier()}`)
+
 
     return (
         <button className={`button__button button__button-${getModifier()}`}

@@ -13,7 +13,7 @@
 
 .button__button-operand, .button__button-decimal, .button__button-negative{
     background-color: #7c7f98;
-    color: #edeef0;
+    color: #000213;
 }
 
 .button__button-operator, .button__button-parentheses{
