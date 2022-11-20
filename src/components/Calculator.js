@@ -1,7 +1,7 @@
 import './Calculator.css';
 import Screen from './Screen';
 import Buttons from './Buttons';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 
 export default function Calculator() {
     //(-) will become n
@@ -20,14 +20,14 @@ export default function Calculator() {
         if (equation.length === 0) {
             throw new Error('Not allowed');
         }
-        if (prevTerm.cat === 'operator') {
+        if (prevTerm.name === 'operator') {
             //creating a temp variable so that react sees this as a new array.
             const temp = [...equation];
             temp[temp.length - 1] = button;
             setEquation(temp);
             return;
         }
-        if (prevTerm.cat === "n" || prevTerm.val.endsWith(".") || prevTerm.val === "(") {
+        if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".") || prevTerm.val === "(") {
             throw new Error('Not allowed');
         }
 
@@ -39,40 +39,13 @@ export default function Calculator() {
             setEquation([...equation, button]);
             return;
         }
-        if (prevTerm.cat === 'operand' || prevTerm.val === 'n' || prevTerm.val === '.') {
+        if (prevTerm.name === 'operand') {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
             return;
         }
         setEquation([...equation, button]);
-    }
-
-    const other = (button) => {
-        const val = button.val;
-        switch (val) {
-            case 'del':
-                del();
-                break;
-            case 'C':
-                clear();
-                break;
-            case '()':
-                parentheses(button);
-                break;
-            case '(-)':
-                negative();
-                break;
-            case '.':
-                decimal(button);
-                break;
-            case '=':
-                equals();
-                break;
-            default:
-                throw new Error('val not found')
-        }
-
     }
 
     const del = (button) => {
@@ -101,13 +74,13 @@ export default function Calculator() {
             lParenthesesCount.current = lParenthesesCount.current + 1;
             return;
         }
-        if (prevTerm.cat === 'operator' || prevTerm.val === '(') {
+        if (prevTerm.name === 'operator' || prevTerm.val === '(') {
             button.val = "("
             setEquation([...equation, button]);
             lParenthesesCount.current = lParenthesesCount.current + 1;
             return;
         }
-        if ((prevTerm.cat === 'operand' || prevTerm.val === ")") && !areParenthesesClosed) {
+        if ((prevTerm.name === 'operand' || prevTerm.val === ")") && !areParenthesesClosed) {
             button.val = ")"
             setEquation([...equation, button]);
             rParenthesesCount.current = rParenthesesCount.current + 1;
@@ -115,12 +88,12 @@ export default function Calculator() {
         }
         if ((prevTerm.val === ")" && areParenthesesClosed) || lParenthesesCount.current === 0) {
             button.val = "(";
-            const multiply = { cat: "operator", val: "x" };
+            const multiply = { name: "operator", val: "x" };
             setEquation([...equation, multiply, button]);
             lParenthesesCount.current = lParenthesesCount.current + 1;
             return;
         }
-        if (prevTerm.val === "n" || prevTerm.val.endsWith(".")) {
+        if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".")) {
             throw new Error('Not allowed');
         }
         else {
@@ -129,10 +102,10 @@ export default function Calculator() {
     }
 
     const negative = (button) => {
-        const lParentheses = { cat: "other", val: "(" }
-        const multiply = { cat: "operator", val: "x" }
-        const neg = { cat: "other", val: "n" }
-        if (equation.length === 0 || prevTerm.cat === "operator") {
+        const lParentheses = { name: "parentheses", val: "(" }
+        const multiply = { name: "operator", val: "x" }
+        const neg = { name: "operand", val: "-" }
+        if (equation.length === 0 || prevTerm.name === "operator") {
             setEquation([...equation, lParentheses, neg]);
             lParenthesesCount.current = lParenthesesCount.current + 1;
             return;
@@ -149,33 +122,33 @@ export default function Calculator() {
             return;
         }
 
-        if (prevTerm.val === "n") {
+        if (prevTerm.name === "operand" && prevTerm.val.endsWith("-")) {
             const temp = equation.slice(0, equation.length - 2);
             setEquation(temp);
             lParenthesesCount.current = lParenthesesCount.current - 1;
             return;
         }
 
-        if (prevTerm.cat === "operand" || prevTerm.val === ".") {
+        if (prevTerm.name === "operand" || prevTerm.val.endsWith(".")) {
             throw new Error('Not allowed');
         }
     }
 
     const decimal = (button) => {
-        const zero = { cat: "operand", val: "0." };
-        const multiply = { cat: "operator", val: "x" }
-        if (prevTerm.val === "." || prevTerm.val.includes(".")) {
+        const zero = { name: "operand", val: "0." };
+        const multiply = { name: "operator", val: "x" }
+        if (prevTerm.val.includes(".")) {
             throw new Error('Not allowed');
         }
 
-        if (equation.length === 0 || prevTerm.cat === "operator" || prevTerm.val === "(" || prevTerm.val === "n") {
+        if (equation.length === 0 || prevTerm.name === "operator" || prevTerm.val === "(" || (prevTerm.name === "operand" && prevTerm.val.endsWith("-"))) {
             setEquation([...equation, zero]);
         }
 
         if (prevTerm.val === ")") {
             setEquation([...equation, multiply, zero]);
         }
-        if (prevTerm.cat === "operand") {
+        if (prevTerm.name === "operand") {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
@@ -189,19 +162,34 @@ export default function Calculator() {
     //this will be the main function that handles all the logic for when a user clicks a button
     //should include updating result and equation
     const handleClick = (button) => {
-        const cat = button.cat;
-        switch (cat) {
+        const name = button.name;
+        switch (name) {
             case 'operator':
                 operator(button);
                 break;
             case 'operand':
                 operand(button);
                 break;
-            case 'other':
-                other(button);
+            case 'del':
+                del();
+                break;
+            case 'clear':
+                clear();
+                break;
+            case 'parentheses':
+                parentheses(button);
+                break;
+            case 'negative':
+                negative();
+                break;
+            case 'decimal':
+                decimal(button);
+                break;
+            case 'equals':
+                equals();
                 break;
             default:
-                throw new Error('val not found')
+                throw new Error('name not found')
         }
     }
 
