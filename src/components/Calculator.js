@@ -2,6 +2,7 @@ import './Calculator.css';
 import Screen from './Screen';
 import Buttons from './Buttons';
 import { useState, useRef } from 'react';
+import { calculateNewValue } from '@testing-library/user-event/dist/utils';
 
 export default function Calculator() {
     //(-) will become n
@@ -14,7 +15,18 @@ export default function Calculator() {
     const rParenthesesCount = useRef(0);
     const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
 
+    //Typeof anything / 0 is infinity
+    const cleanEquation = () => {
 
+    }
+
+    const infixToPostfix = () => {
+
+    }
+
+    const calculate = () => {
+
+    }
 
     const operator = (button) => {
         if (equation.length === 0) {
@@ -29,6 +41,7 @@ export default function Calculator() {
         }
         if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".") || prevTerm.val === "(") {
             console.log('Not allowed'); //For the future: Error message for the user.
+            return;
         }
 
         setEquation([...equation, button])
@@ -95,10 +108,11 @@ export default function Calculator() {
         }
         if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".")) {
             console.log('Not allowed');
+            return;
         }
-        else {
-            console.log('A case we were not expecting');
-        }
+
+        console.log('A case we were not expecting');
+
     }
 
     const negative = (button) => {
@@ -139,6 +153,7 @@ export default function Calculator() {
         const multiply = { name: "operator", val: "x" }
         if (prevTerm.val.includes(".")) {
             console.log('Not allowed');
+            return;
         }
 
         if (equation.length === 0 || prevTerm.name === "operator" || prevTerm.val === "(" || (prevTerm.name === "operand" && prevTerm.val.endsWith("-"))) {
@@ -155,7 +170,7 @@ export default function Calculator() {
         }
     }
 
-    const equals = (button) => {
+    const equals = () => {
 
     }
 
