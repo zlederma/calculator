@@ -1,4 +1,10 @@
 .calculator__container{
     width: 360px;
-    border: 1px solid black;
+    /* border: 1px solid #9699b5; */
+    border-radius: 10px;
+    padding: 5px;
+
+    box-shadow: 4px 3px 9px 1px rgba(124,127,152,0.91);
+    -webkit-box-shadow: 4px 3px 9px 1px rgba(124,127,152,0.91);
+    -moz-box-shadow: 4px 3px 9px 1px rgba(124,127,152,0.91);
 }
