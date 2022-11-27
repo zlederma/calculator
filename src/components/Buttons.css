@@ -5,6 +5,8 @@
 .buttons__delete-container{
     display: flex;
     justify-content: flex-end;
+    border-bottom:  1px solid #7c7f98;
+    padding-bottom: 5px;
 }
 
 .buttons__delete-container Button{
@@ -16,4 +18,5 @@
 .buttons__container{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
+    padding-top: 5px;
 }
