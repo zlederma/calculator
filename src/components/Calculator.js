@@ -8,7 +8,7 @@ export default function Calculator() {
     //use useState to lift up state in order to figure out what button is pressed
     const [equation, setEquation] = useState([]);
     let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
-    const result = useRef("Hi");
+    const result = useRef("Hello");
     //use this to keep track of how many opening(l) and closing(r) parentheses there are
     const lParenthesesCount = useRef(0);
     const rParenthesesCount = useRef(0);
@@ -18,7 +18,7 @@ export default function Calculator() {
 
     const operator = (button) => {
         if (equation.length === 0) {
-            throw new Error('Not allowed');
+            console.log('Not allowed');
         }
         if (prevTerm.name === 'operator') {
             //creating a temp variable so that react sees this as a new array.
@@ -28,7 +28,7 @@ export default function Calculator() {
             return;
         }
         if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".") || prevTerm.val === "(") {
-            throw new Error('Not allowed');
+            console.log('Not allowed'); //For the future: Error message for the user.
         }
 
         setEquation([...equation, button])
@@ -94,10 +94,10 @@ export default function Calculator() {
             return;
         }
         if ((prevTerm.name === "operand" && prevTerm.val.endsWith("-")) || prevTerm.val.endsWith(".")) {
-            throw new Error('Not allowed');
+            console.log('Not allowed');
         }
         else {
-            throw new Error('A case we were not expecting');
+            console.log('A case we were not expecting');
         }
     }
 
@@ -130,7 +130,7 @@ export default function Calculator() {
         }
 
         if (prevTerm.name === "operand" || prevTerm.val.endsWith(".")) {
-            throw new Error('Not allowed');
+            console.log('Not allowed');
         }
     }
 
@@ -138,7 +138,7 @@ export default function Calculator() {
         const zero = { name: "operand", val: "0." };
         const multiply = { name: "operator", val: "x" }
         if (prevTerm.val.includes(".")) {
-            throw new Error('Not allowed');
+            console.log('Not allowed');
         }
 
         if (equation.length === 0 || prevTerm.name === "operator" || prevTerm.val === "(" || (prevTerm.name === "operand" && prevTerm.val.endsWith("-"))) {
@@ -189,7 +189,7 @@ export default function Calculator() {
                 equals();
                 break;
             default:
-                throw new Error('name not found')
+                console.log('name not found')
         }
     }
 
