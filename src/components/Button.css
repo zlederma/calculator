@@ -1,14 +1,18 @@
 .button__button{
     font-family: 'Comfortaa', cursive;
     font-size: 25px;
-    font-weight: 500;
-    background-color: #240034;
-    color: #e5ccf0;
+    font-weight: 500; 
     border-radius: 40%;
     border: none;
     width: 80px;
     height: 80px;
     margin: 5px;
+    box-shadow: 0px 1px 4px 1px rgba(150, 150, 150, .5);
+}
+
+.button__button-operand, .button__button-decimal, .button__button-negative{
+    background-color: #7c7f98;
+    color: #000213;
 }
 
 .button__button-operand, .button__button-decimal, .button__button-negative{
@@ -21,9 +25,8 @@
     color: #7c7f98;
 }
 
-.button__button-equals{
- font-weight: 900;
-    background-color: #000213;
+.button__button-del{
+    background-color: #7c7f98;
     color: #edeef0;
 }
 
@@ -33,7 +36,36 @@
     color: #000213;
 }
 
-.button__button-del{
-    background-color: #7c7f98;
+.button__button-equals{
+    font-weight: 900;
+    background-color: #000213;
     color: #edeef0;
+    box-shadow: 0px 1px 4px 1px rgba(0, 0, 0, 0.5);
+   }
+
+.button__button-operand:hover, .button__button-decimal:hover, .button__button-negative:hover, .button__button-del:hover {
+    background-color:  #8f93b0;
+}
+.button__button-operand:active, .button__button-decimal:active, .button__button-negative:active, .button__button-del:active{
+    background-color: #8f93b0;
+    box-shadow: none;
+}
+
+.button__button-operator:hover, .button__button-parentheses:hover, .button__button-clear:hover{
+    background-color: #e4e5e7;
+}
+
+
+.button__button-operator:active, .button__button-parentheses:active, .button__button-clear:active{
+    background-color: #e4e5e7;
+    box-shadow: none;
+}
+
+.button__button-equals:hover{
+    background-color: #00073b;
+}
+
+.button__button-equals:active{
+    background-color: #00073b;
+    box-shadow: none;
 }
