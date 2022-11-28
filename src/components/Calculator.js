@@ -2,7 +2,6 @@ import './Calculator.css';
 import Screen from './Screen';
 import Buttons from './Buttons';
 import { useState, useRef } from 'react';
-import { calculateNewValue } from '@testing-library/user-event/dist/utils';
 
 export default function Calculator() {
     //(-) will become n
@@ -16,12 +15,74 @@ export default function Calculator() {
     const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
 
     //Typeof anything / 0 is infinity
+    //add parentheses
+    //Solve for the case where there is an operand surrounded by parentheses.
     const cleanEquation = () => {
 
     }
 
-    const infixToPostfix = () => {
+    //Function to return precedence of operators
+    const precedence = (val) => {
+        if (val === '^')
+            return 3;
+        else if (val === '÷' || val === 'x')
+            return 2;
+        else if (val === '+' || val === '-')
+            return 1;
+        else
+            return -1;
+    }
 
+    //Source: https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/
+    const infixToPostfix = (cleanEquation) => {
+        console.log("here")
+
+        let stack = []; //For stack operations, we are using C++ built in stack
+        let result = "";
+
+        for (let i = 0; i < cleanEquation.length; i++) {
+            let val = cleanEquation[i].val;
+            let cat = cleanEquation[i].cat;
+
+            // If the scanned character is
+            // an operand, add it to output string.
+            if (cat === "operand")
+                result += val;
+
+            // If the scanned character is an
+            // ‘(‘, push it to the stack.
+            else if (val === '(')
+                stack.push('(');
+
+            // If the scanned character is an ‘)’,
+            // pop and to output string from the stack
+            // until an ‘(‘ is encountered.
+            else if (val === ')') {
+                while (stack[stack.length - 1] !== '(') {
+                    console.log("in while:" + result)
+                    result += stack[stack.length - 1];
+                    stack.pop();
+                }
+                stack.pop();
+                console.log("out of while" + result)
+            }
+
+            //If an operator is scanned
+            else {
+                while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1])) {
+                    result += stack[stack.length - 1];
+                    stack.pop();
+                }
+                stack.push(val);
+            }
+        }
+
+        // Pop all the remaining elements from the stack
+        while (stack.length !== 0) {
+            result += stack[stack.length - 1];
+            stack.pop();
+        }
+        console.log(result)
     }
 
     const calculate = () => {
@@ -48,6 +109,7 @@ export default function Calculator() {
     }
 
     const operand = (button) => {
+        console.log("test")
         if (equation.length === 0) {
             setEquation([...equation, button]);
             return;
@@ -56,6 +118,14 @@ export default function Calculator() {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
+            return;
+        }
+
+        if (prevTerm.val === ')') {
+            const lParentheses = { name: "parentheses", val: "(" }
+            const multiply = { name: "operator", val: "x" }
+            setEquation([...equation, multiply, lParentheses, button]);
+            lParenthesesCount.current = lParenthesesCount.current + 1;
             return;
         }
         setEquation([...equation, button]);
@@ -158,20 +228,23 @@ export default function Calculator() {
 
         if (equation.length === 0 || prevTerm.name === "operator" || prevTerm.val === "(" || (prevTerm.name === "operand" && prevTerm.val.endsWith("-"))) {
             setEquation([...equation, zero]);
+            return;
         }
 
         if (prevTerm.val === ")") {
             setEquation([...equation, multiply, zero]);
+            return;
         }
         if (prevTerm.name === "operand") {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
+            return;
         }
     }
 
     const equals = () => {
-
+        infixToPostfix(equation);
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
