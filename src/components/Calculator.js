@@ -37,7 +37,7 @@ export default function Calculator() {
     const infixToPostfix = (cleanEquation) => {
 
         let stack = []; //For stack operations, we are using C++ built in stack
-        let result = "";
+        let result = [];
 
         for (let i = 0; i < cleanEquation.length; i++) {
             let val = cleanEquation[i].val;
@@ -45,36 +45,39 @@ export default function Calculator() {
 
             // If the scanned character is
             // an operand, add it to output string.
-            if (name === "operand")
-                result += val;
+            if (name === "operand") {
+                result.push(cleanEquation[i]);
+            }
 
             // If the scanned character is an
             // ‘(‘, push it to the stack.
-            else if (val === '(')
-                stack.push('(');
+            else if (val === '(') {
+                const lParentheses = { name: "parentheses", val: "(" }
+                stack.push(lParentheses);
+            }
 
             // If the scanned character is an ‘)’,
             // pop and to output string from the stack
             // until an ‘(‘ is encountered.
             else if (val === ')') {
-                while (stack[stack.length - 1] !== '(') {
-                    result += stack.pop();
+                while (stack[stack.length - 1].val !== '(') {
+                    result.push(stack.pop());
                 }
                 stack.pop()
             }
 
             //If an operator is scanned
             else {
-                while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1])) {
-                    result += stack.pop();
+                while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1]).val) {
+                    result.push(stack.pop());
                 }
-                stack.push(val);
+                stack.push(cleanEquation[i]);
             }
         }
 
         // Pop all the remaining elements from the stack
         while (stack.length !== 0) {
-            result += stack.pop()
+            result.push(stack.pop());
         }
         return result;
     }
