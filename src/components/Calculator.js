@@ -35,18 +35,17 @@ export default function Calculator() {
 
     //Source: https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/
     const infixToPostfix = (cleanEquation) => {
-        console.log("here")
 
         let stack = []; //For stack operations, we are using C++ built in stack
         let result = "";
 
         for (let i = 0; i < cleanEquation.length; i++) {
             let val = cleanEquation[i].val;
-            let cat = cleanEquation[i].cat;
+            let name = cleanEquation[i].name !== undefined ? cleanEquation[i].name : "";
 
             // If the scanned character is
             // an operand, add it to output string.
-            if (cat === "operand")
+            if (name === "operand")
                 result += val;
 
             // If the scanned character is an
@@ -59,19 +58,15 @@ export default function Calculator() {
             // until an ‘(‘ is encountered.
             else if (val === ')') {
                 while (stack[stack.length - 1] !== '(') {
-                    console.log("in while:" + result)
-                    result += stack[stack.length - 1];
-                    stack.pop();
+                    result += stack.pop();
                 }
-                stack.pop();
-                console.log("out of while" + result)
+                stack.pop()
             }
 
             //If an operator is scanned
             else {
                 while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1])) {
-                    result += stack[stack.length - 1];
-                    stack.pop();
+                    result += stack.pop();
                 }
                 stack.push(val);
             }
@@ -79,10 +74,9 @@ export default function Calculator() {
 
         // Pop all the remaining elements from the stack
         while (stack.length !== 0) {
-            result += stack[stack.length - 1];
-            stack.pop();
+            result += stack.pop()
         }
-        console.log(result)
+        return result;
     }
 
     const calculate = () => {
