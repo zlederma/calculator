@@ -82,8 +82,56 @@ export default function Calculator() {
         return result;
     }
 
-    const calculate = () => {
+    const calculatePostfix = (postfixEquation) => {
 
+        //create a stack
+        let stack = [];
+
+        // Scan all characters one by one
+        for (let i = 0; i < postfixEquation.length; i++) {
+            const name = postfixEquation[i].name
+            const val = postfixEquation[i].val
+
+
+            // If the scanned character is an operand (number here),
+            // push it to the stack.
+            if (name === "operand") {
+                stack.push(parseFloat(val));
+            }
+
+            //  If the scanned character is an operator, pop two
+            // elements from stack apply the operator
+            else {
+                let term1 = stack.pop();
+                let term2 = stack.pop();
+
+                switch (val) {
+                    case '+':
+                        stack.push(term2 + term1);
+                        break;
+
+                    case '-':
+                        stack.push(term2 - term1);
+                        break;
+
+                    case '÷':
+                        stack.push(term2 / term1);
+                        break;
+
+                    case 'x':
+                        stack.push(term2 * term1);
+                        break;
+
+                    case '^':
+                        stack.push(Math.pow(term2, term1));
+                        break;
+
+                    default:
+                        console.log('name not found')
+                }
+            }
+        }
+        return stack.pop();
     }
 
     const operator = (button) => {
@@ -241,7 +289,9 @@ export default function Calculator() {
     }
 
     const equals = () => {
-        infixToPostfix(equation);
+        let postFix = infixToPostfix(equation);
+        let result = calculatePostfix(postFix);
+        console.log(result)
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
