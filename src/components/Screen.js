@@ -2,8 +2,16 @@ import './Screen.css';
 export default function Screen(props) {
     const showEquation = () => {
         const equation = [];
-        props.equation.forEach(term => equation.push(
-            <div className='screen__term'>{term.val}</div>));
+        for (let i = 0; i < props.equation.length; i++) {
+            let className = 'screen__term'
+            if (props.equation[i].name === "operator" || props.equation[i].name === "parentheses") {
+                className += "-purple"
+            }
+
+            equation.push(
+                <div className={className} key={i}>{props.equation[i].val}</div>);
+        }
+
         return equation;
     }
     return (
