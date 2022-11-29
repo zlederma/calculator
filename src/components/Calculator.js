@@ -9,6 +9,7 @@ export default function Calculator() {
     const [equation, setEquation] = useState([]);
     const currEquation = useRef([]) //For synchronous updates
     let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
+    console.log(prevTerm)
     const [result, setResult] = useState("");
     //use this to keep track of how many opening(l) and closing(r) parentheses there are
     const lParenthesesCount = useRef(0);
@@ -303,11 +304,16 @@ export default function Calculator() {
     }
 
     const equals = () => {
-        let postFix = infixToPostfix(equation);
-        let calculation = calculatePostfix(postFix);
-        let term = { name: "operand", val: calculation }
-        setResult("");
-        setEquation([term]);
+        if (prevTerm.name === "operand" || prevTerm.val === ")") {
+            let postFix = infixToPostfix(equation);
+            let calculation = calculatePostfix(postFix);
+            let term = { name: "operand", val: calculation.toString() }
+            setResult("");
+            setEquation([term]);
+        }
+        else {
+            console.log('Not allowed');
+        }
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
