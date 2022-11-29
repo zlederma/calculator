@@ -24,7 +24,6 @@ export default function Calculator() {
         for (let i = 0; i < numParentheses; i++) {
             clean.push(rParentheses);
         }
-        console.log(clean.length)
         return clean;
     }
 
@@ -49,7 +48,6 @@ export default function Calculator() {
         for (let i = 0; i < cleanEquation.length; i++) {
             let val = cleanEquation[i].val !== undefined ? cleanEquation[i].val : "";
             let name = cleanEquation[i].name !== undefined ? cleanEquation[i].name : "";
-            console.log(stack)
 
             // If the scanned character is
             // an operand, add it to output string.
@@ -62,7 +60,6 @@ export default function Calculator() {
             else if (val === '(') {
                 const lParentheses = { name: "parentheses", val: "(" }
                 stack.push(lParentheses);
-                console.log(stack[0].val)
             }
 
             // If the scanned character is an ‘)’,
@@ -101,8 +98,6 @@ export default function Calculator() {
         for (let i = 0; i < postfixEquation.length; i++) {
             const name = postfixEquation[i].name
             const val = postfixEquation[i].val
-            console.log("name: " + name + " val: " + val);
-
 
             // If the scanned character is an operand (number here),
             // push it to the stack.
@@ -115,7 +110,6 @@ export default function Calculator() {
             else {
                 let term1 = stack.pop();
                 let term2 = stack.pop();
-                console.log(val);
 
                 switch (val) {
                     case '+':
@@ -166,7 +160,6 @@ export default function Calculator() {
     }
 
     const operand = (button) => {
-        console.log("test")
         if (equation.length === 0) {
             setEquation([...equation, button]);
         }
@@ -196,7 +189,7 @@ export default function Calculator() {
         }
     }
 
-    const del = (button) => {
+    const del = () => {
         if (equation[equation.length - 1] === "(") {
             lParenthesesCount.current = lParenthesesCount.current - 1;
         }
@@ -211,8 +204,9 @@ export default function Calculator() {
 
     }
 
-    const clear = (button) => {
-
+    const clear = () => {
+        setEquation([]);
+        setResult("");
     }
 
     const parentheses = (button) => {
@@ -250,7 +244,7 @@ export default function Calculator() {
 
     }
 
-    const negative = (button) => {
+    const negative = () => {
         const lParentheses = { name: "parentheses", val: "(" }
         const multiply = { name: "operator", val: "x" }
         const neg = { name: "operand", val: "-" }
@@ -310,9 +304,10 @@ export default function Calculator() {
 
     const equals = () => {
         let postFix = infixToPostfix(equation);
-        // result.current = calculatePostfix(postFix);
-        setResult(calculatePostfix(postFix));
-        // console.log(result)
+        let calculation = calculatePostfix(postFix);
+        let term = { name: "operand", val: calculation }
+        setResult("");
+        setEquation([term]);
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
