@@ -7,8 +7,9 @@ export default function Calculator() {
     //(-) will become n
     //use useState to lift up state in order to figure out what button is pressed
     const [equation, setEquation] = useState([]);
+    const currEquation = useRef([]) //For synchronous updates
     let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
-    const result = useRef("Hello");
+    const [result, setResult] = useState("");
     //use this to keep track of how many opening(l) and closing(r) parentheses there are
     const lParenthesesCount = useRef(0);
     const rParenthesesCount = useRef(0);
@@ -17,8 +18,14 @@ export default function Calculator() {
     //Typeof anything / 0 is infinity
     //add parentheses
     //Solve for the case where there is an operand surrounded by parentheses.
-    const cleanEquation = () => {
-
+    const cleanEquation = (clean) => {
+        const rParentheses = { name: "parentheses", val: ")" }
+        const numParentheses = lParenthesesCount.current - rParenthesesCount.current;
+        for (let i = 0; i < numParentheses; i++) {
+            clean.push(rParentheses);
+        }
+        console.log(clean.length)
+        return clean;
     }
 
     //Function to return precedence of operators
@@ -40,8 +47,9 @@ export default function Calculator() {
         let result = [];
 
         for (let i = 0; i < cleanEquation.length; i++) {
-            let val = cleanEquation[i].val;
+            let val = cleanEquation[i].val !== undefined ? cleanEquation[i].val : "";
             let name = cleanEquation[i].name !== undefined ? cleanEquation[i].name : "";
+            console.log(stack)
 
             // If the scanned character is
             // an operand, add it to output string.
@@ -54,21 +62,23 @@ export default function Calculator() {
             else if (val === '(') {
                 const lParentheses = { name: "parentheses", val: "(" }
                 stack.push(lParentheses);
+                console.log(stack[0].val)
             }
 
             // If the scanned character is an ‘)’,
             // pop and to output string from the stack
             // until an ‘(‘ is encountered.
             else if (val === ')') {
-                while (stack[stack.length - 1].val !== '(') {
+                while (stack.length > 0 && stack[stack.length - 1].val !== '(') {
+                    console.log(stack[stack.length - 1].val)
                     result.push(stack.pop());
                 }
                 stack.pop()
             }
 
             //If an operator is scanned
-            else {
-                while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1]).val) {
+            else if (name === "operator") {
+                while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1].val)) {
                     result.push(stack.pop());
                 }
                 stack.push(cleanEquation[i]);
@@ -91,6 +101,7 @@ export default function Calculator() {
         for (let i = 0; i < postfixEquation.length; i++) {
             const name = postfixEquation[i].name
             const val = postfixEquation[i].val
+            console.log("name: " + name + " val: " + val);
 
 
             // If the scanned character is an operand (number here),
@@ -104,26 +115,27 @@ export default function Calculator() {
             else {
                 let term1 = stack.pop();
                 let term2 = stack.pop();
+                console.log(val);
 
                 switch (val) {
                     case '+':
-                        stack.push(term2 + term1);
+                        stack.push(parseFloat((term2 + term1).toFixed(6)));
                         break;
 
                     case '-':
-                        stack.push(term2 - term1);
+                        stack.push(parseFloat((term2 - term1).toFixed(6)));
                         break;
 
                     case '÷':
-                        stack.push(term2 / term1);
+                        stack.push(parseFloat((term2 / term1).toFixed(6)));
                         break;
 
                     case 'x':
-                        stack.push(term2 * term1);
+                        stack.push(parseFloat((term2 * term1).toFixed(6)));
                         break;
 
                     case '^':
-                        stack.push(Math.pow(term2, term1));
+                        stack.push(parseFloat((Math.pow(term2, term1)).toFixed(6)));
                         break;
 
                     default:
@@ -157,23 +169,31 @@ export default function Calculator() {
         console.log("test")
         if (equation.length === 0) {
             setEquation([...equation, button]);
-            return;
         }
-        if (prevTerm.name === 'operand') {
+        else if (prevTerm.name === 'operand') {
             const temp = [...equation];
             temp[temp.length - 1].val = prevTerm.val + button.val;
             setEquation(temp);
-            return;
+            currEquation.current = temp;
         }
 
-        if (prevTerm.val === ')') {
+        else if (prevTerm.val === ')') {
             const lParentheses = { name: "parentheses", val: "(" }
             const multiply = { name: "operator", val: "x" }
             setEquation([...equation, multiply, lParentheses, button]);
+            currEquation.current = [...equation, multiply, lParentheses, button];
             lParenthesesCount.current = lParenthesesCount.current + 1;
-            return;
         }
-        setEquation([...equation, button]);
+        else {
+            setEquation([...equation, button]);
+            currEquation.current = [...equation, button];
+        }
+
+        if (equation.length > 1) {
+            let clean = cleanEquation(currEquation.current);
+            let postfix = infixToPostfix(clean);
+            setResult(calculatePostfix(postfix));
+        }
     }
 
     const del = (button) => {
@@ -290,8 +310,9 @@ export default function Calculator() {
 
     const equals = () => {
         let postFix = infixToPostfix(equation);
-        let result = calculatePostfix(postFix);
-        console.log(result)
+        // result.current = calculatePostfix(postFix);
+        setResult(calculatePostfix(postFix));
+        // console.log(result)
     }
 
     //this will be the main function that handles all the logic for when a user clicks a button
@@ -330,7 +351,7 @@ export default function Calculator() {
 
     return (
         <div className='calculator__container'>
-            <Screen equation={equation} result={result.current} />
+            <Screen equation={equation} result={result} />
             <Buttons handleClick={handleClick} />
         </div>
     )
