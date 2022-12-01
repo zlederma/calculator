@@ -21,7 +21,7 @@ The calculator is user friendly, increasing the complexity of the code.
 
 ## Extending Code
 
-I have a lot of smaller things I would do if continuing this project, but here are some of the bigger ones:
+I have a lot of smaller things I would work on if continuing this project, but here are some of the bigger ones:
 
 - Taking a lot of the code in “Calculator.js” and modify it to use two classes. A “Calculate” class and a “Parentheses” class. This would help to better encapsulate the logic that these two areas of the code entail, along with slimming down the code in “Calculator.js”. As opposed to class based React, functional React is the more common version of React that developers use, so that’s how I’ve trained myself to think in React. Because of this, I find it slightly confusing to combine functional react with classes, but through working on this project I could see just how helpful sending some of the logic to a class would have been.
 - I would chunk out the logic more, and add more helper functions.
