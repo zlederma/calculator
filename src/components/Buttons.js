@@ -3,6 +3,7 @@ import Button from './Button';
 
 export default function Buttons(props) {
     return (
+        //For the future: change "del" to an icon
         <div className='buttons__wrapper'>
             <div className='buttons__delete-container'>
                 <Button name='del' val='del' handleClick={props.handleClick} />
