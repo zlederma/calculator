@@ -4,12 +4,16 @@ import Buttons from './Buttons';
 import { useState, useRef } from 'react';
 
 export default function Calculator() {
+    //For the future: comment my code better.
+    //For the future: make the calculators layout more responsive.
+    //For the future: clean up code and add helper function for reused code.
     const [equation, setEquation] = useState([]);
     const [result, setResult] = useState("");
     const currEquation = useRef([]) //For synchronous updates
     let prevTerm = equation.length > 0 ? equation[equation.length - 1] : {};
 
     //use this to keep track of how many opening(l) and closing(r) parentheses there are
+    //For the future: parse this out into its own "parentheses" class
     const lParenthesesCount = useRef(0);
     const rParenthesesCount = useRef(0);
     const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
@@ -22,11 +26,10 @@ export default function Calculator() {
     const zero = { name: "operand", val: "0." };
 
     //TODO Typeof anything / 0 is infinity
-    //add parentheses
-    //Solve for the case where there is an operand surrounded by parentheses.
     //Have to pass in equation because the equation in useState does not update synchronously
-    const cleanEquation = (equation) => {
-        let clean = [...equation];
+    //For the future: parse this out into a calculate class
+    const cleanEquation = (cleanEquation) => {
+        let clean = [...cleanEquation];
         const numParentheses = lParenthesesCount.current - rParenthesesCount.current;
         for (let i = 0; i < numParentheses; i++) {
             clean.push(rParentheses);
