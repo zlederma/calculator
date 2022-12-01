@@ -1,6 +1,6 @@
 # Calculator
 
-This project was bootstrapped with [Link to calculator](https://polite-wisp-6d494b.netlify.app/).
+[Link to calculator](https://polite-wisp-6d494b.netlify.app/).
 
 ## Technical Decisions
 
