@@ -28,8 +28,8 @@ export default function Calculator() {
     //TODO Typeof anything / 0 is infinity
     //Have to pass in equation because the equation in useState does not update synchronously
     //For the future: parse this out into a calculate class
-    const cleanEquation = (cleanEquation) => {
-        let clean = [...cleanEquation];
+    const cleanEquation = (equation) => {
+        let clean = [...equation];
         const numParentheses = lParenthesesCount.current - rParenthesesCount.current;
         for (let i = 0; i < numParentheses; i++) {
             clean.push(rParentheses);
@@ -50,17 +50,17 @@ export default function Calculator() {
     }
 
     //Source: https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/
-    const infixToPostfix = (cleanEquation) => {
+    const infixToPostfix = (equation) => {
 
         let stack = [];
         let result = [];
 
-        for (let i = 0; i < cleanEquation.length; i++) {
-            let val = cleanEquation[i].val !== undefined ? cleanEquation[i].val : "";
-            let name = cleanEquation[i].name !== undefined ? cleanEquation[i].name : "";
+        for (let i = 0; i < equation.length; i++) {
+            let val = equation[i].val !== undefined ? equation[i].val : "";
+            let name = equation[i].name !== undefined ? equation[i].name : "";
 
             if (name === "operand") {
-                result.push(cleanEquation[i]);
+                result.push(equation[i]);
             }
 
             else if (val === '(') {
@@ -78,7 +78,7 @@ export default function Calculator() {
                 while (stack.length !== 0 && precedence(val) <= precedence(stack[stack.length - 1].val)) {
                     result.push(stack.pop());
                 }
-                stack.push(cleanEquation[i]);
+                stack.push(equation[i]);
             }
         }
 
@@ -89,13 +89,13 @@ export default function Calculator() {
         return result;
     }
 
-    const calculatePostfix = (postfixEquation) => {
+    const calculatePostfix = (equation) => {
 
         let stack = [];
 
-        for (let i = 0; i < postfixEquation.length; i++) {
-            const name = postfixEquation[i].name
-            const val = postfixEquation[i].val
+        for (let i = 0; i < equation.length; i++) {
+            const name = equation[i].name
+            const val = equation[i].val
 
             if (name === "operand") {
                 stack.push(parseFloat(val));
