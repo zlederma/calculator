@@ -16,10 +16,11 @@ export default function Calculator() {
     const rParenthesesCount = useRef(0);
     const areParenthesesClosed = lParenthesesCount.current === rParenthesesCount.current ? true : false;
 
-    //Typeof anything / 0 is infinity
+    // TODO Typeof anything / 0 is infinity
     //add parentheses
     //Solve for the case where there is an operand surrounded by parentheses.
-    const cleanEquation = (clean) => {
+    const cleanEquation = (equation) => {
+        let clean = [...equation];
         const rParentheses = { name: "parentheses", val: ")" }
         const numParentheses = lParenthesesCount.current - rParenthesesCount.current;
         for (let i = 0; i < numParentheses; i++) {
